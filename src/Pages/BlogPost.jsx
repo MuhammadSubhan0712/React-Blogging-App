@@ -1,6 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 const BlogPost = () => {
+
+  const [blog , setBlog] = useState()
+
+  
   return (
   <>
   <div>
@@ -22,12 +26,14 @@ const BlogPost = () => {
 <input
   className="input input-bordered w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
   type="text"
-  placeholder="placeholder" />
+  placeholder="placeholder"  />
 </div>
 
 {/*  Blog area  */}
 <div className="mb-4">
-<textarea className="input input-bordered w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="blog" placeholder="What is in your mind"/>
+<textarea rows={54} cols={6} className="input input-bordered w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="blog" placeholder="What is in your mind">
+</textarea>
+
 </div>
 
 
