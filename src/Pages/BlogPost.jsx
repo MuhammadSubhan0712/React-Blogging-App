@@ -1,10 +1,11 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 
 const BlogPost = () => {
 
   const [blog , setBlog] = useState()
 
-  
+  const placeholder = useRef()
+  const text = useRef()
   return (
   <>
   <div>
@@ -26,12 +27,12 @@ const BlogPost = () => {
 <input
   className="input input-bordered w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
   type="text"
-  placeholder="placeholder"  />
+  placeholder="placeholder"  ref={placeholder}/>
 </div>
 
 {/*  Blog area  */}
 <div className="mb-4">
-<textarea rows={54} cols={6} className="input input-bordered w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="blog" placeholder="What is in your mind">
+<textarea rows={54} cols={6} className="input input-bordered w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="blog" placeholder="What is in your mind" ref={text}>
 </textarea>
 
 </div>
