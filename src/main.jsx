@@ -3,11 +3,11 @@ import { createRoot } from 'react-dom/client'
 import App from './App.jsx'
 import './index.css'
 import { createBrowserRouter , RouterProvider } from 'react-router-dom'
-import { Layout } from './Layout.jsx'
+import Layout  from './Layout.jsx'
 import Dashboard from './Pages/Dashboard.jsx'
 import Login from './Pages/Login.jsx'
 import Register from './Pages/Register.jsx'
-import { BlogPost } from './Pages/BlogPost.jsx'
+import BlogPost  from './Pages/BlogPost.jsx'
 
 const router = createBrowserRouter([
   {

@@ -1,7 +1,8 @@
 import React from 'react'
 import { Navbar } from './components/Navbar'
 import {Outlet} from 'react-router-dom'
-export const Layout = () => {
+
+ const Layout = () => {
   return (
     <div>
     <div>
@@ -12,5 +13,7 @@ export const Layout = () => {
         <Outlet/>
     </div>
     </div>
+
   )
 }
+export default Layout
