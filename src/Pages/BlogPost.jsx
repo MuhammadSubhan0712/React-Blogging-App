@@ -3,7 +3,18 @@ import { Edit3, Trash2, FileText } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import {  getAuth , onAuthStateChanged , signOut, } from "firebase/auth";
 import { auth , db } from '../Config';
-
+import {
+  collection,
+  addDoc,
+  getDocs,
+  doc, 
+  deleteDoc,
+  updateDoc ,
+  query,
+  Timestamp,
+  where,
+  orderBy, 
+} from "firebase/firestore"
 
 
 const BlogPost = () => {
@@ -38,9 +49,9 @@ const logout = () => {
     .catch((error) => {
       console.log(error);
     });
-});
-
 }
+
+
 
 
 
