@@ -71,7 +71,7 @@ const Home = () => {
                 className="bg-white shadow-md rounded-lg p-6">
                 <h3 className="text-xl font-bold mb-2">{blog.title}</h3>
                 <p className="text-gray-700 mb-4">
-                  by <span className="font-semibold">{blog.title}</span>
+                  by <span className="font-semibold">{blog.author}</span>
                 </p>
                 <p className="text-gray-600">{blog.content}</p>
               </div>
