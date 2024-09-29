@@ -1,37 +1,49 @@
-import React from 'react';
+import React , { useState }from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from 'react-hook-form';
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { signUpUser, uploadImage } from '../config/Firebase/Methods';
 import { auth } from "../config/Firebase/config";
 
 
 function Register() {
+
+  const [isSubmission, setIsSubmission] = useState(false); // Start with false
+
   const navigate = useNavigate();
   
   const { register, handleSubmit, reset, formState: { errors } } = useForm();
 
   
-  const onSubmit = (data) => {
-    const auth = getAuth();
-    const { email, password } = data;
+  const onSubmit = async (data) => {
+    setIsSubmission(true);
+    console.log(data);
 
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        const user = userCredential.user;
-        console.log(user);
-
-        // To Clear the input form fields
-        reset();
-
-        // Navigate to login page after successful registration 
-        navigate('/login');
-      })
-      .catch((error) => {
-        console.error("Error Occured:", error.message);
+    try {
+      const userProfileImageUrl = await uploadImage(data.profileImage[0], data.email);
+      const userData = await signUpUser({
+        email: data.email,
+        password: data.password,
+        fullName: data.fullName,
+        profileImage: userProfileImageUrl
       });
+      console.log(userData);
+      navigate('/login');
+    } catch (error) {
+      alert(error);
+      console.log(error);
+    }
+    setIsSubmission(false); // Reset to false after submission completes
   };
-
+  
   return (
+    <>
+     <nav className="bg-[#7749F8] sm:p-0 p-1 flex flex-wrap justify-between items-center">
+        <Link to="/" className="text-white sm:ml-24 ml-5 sm:text-[1.4rem] text-[1.3rem] font-bold hover:bg-[#5628F6]  rounded-lg transition duration-300 sm:px-2 px-0 py-0  sm:py-1">Personal Blogging App</Link>
+        <div className="flex justify-center items-center font-semibold sm:mr-12 mr-5 ">
+          <Link to="/Login" className="text-white sm:px-2 px-0 py-0  sm:py-1 hover:bg-[#5628F6]  rounded-lg transition duration-300">Login</Link>
+        </div>
+      </nav>
+      
     <div className="bg-base-100 flex flex-col h-screen items-center justify-center">
       {/* Register form */}
       <div className="w-full max-w-lg">
@@ -44,21 +56,10 @@ function Register() {
             <input
               className="input input-bordered w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               type="text"
-              placeholder="First Name"
-              {...register("fname", { required: "First name is required" })}
+              placeholder="Full Name"
+              {...register("fname", { required: "Full name is required" })}
             />
             {errors.fname && <p className="text-red-500 text-xs italic">{errors.fname.message}</p>}
-          </div>
-
-          {/* Last Name */}
-          <div className="mb-4">
-            <input
-              className="input input-bordered w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              type="text"
-              placeholder="Last Name"
-              {...register("lname", { required: "Last name is required" })}
-            />
-            {errors.lname && <p className="text-red-500 text-xs italic">{errors.lname.message}</p>}
           </div>
 
           {/* Email */}
@@ -88,9 +89,9 @@ function Register() {
             <input
               className="input input-bordered w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
               type="file"
-              {...register("userimage" , {required: true})}
+              {...register("profileImage" , {required: true})}
             />
-            {errors.userimage && <p className="text-red-500 text-xs italic">This field is required</p>}
+            {errors.profileImage && <p className="text-red-500 text-xs italic">This field is required</p>}
           </div>
 
           {/* Register Button */}
@@ -100,6 +101,7 @@ function Register() {
         </form>
       </div>
     </div>
+    </>
   );
 }
 

@@ -19,6 +19,7 @@ import {
   Timestamp,
   orderBy, 
 } from "firebase/firestore"
+import Navbar from '../components/Navbar';
 
 
 const BlogPost = () => {
@@ -27,68 +28,52 @@ const BlogPost = () => {
   const placeholder = useRef();
   const text = useRef();
 
-
-
-// When user login:
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    const uid = user.uid;
-    console.log(uid);
-  } 
-  else {
-    navigate = "dashboard";
-  }
-});
-
-
-const logout = () => {
-  const auth = getAuth();
-
-  signOut(auth)
-    .then(() => {
-      console.log("Logout succesfully");
-      navigate = "login";
-    })
-
-    .catch((error) => {
-      console.log(error);
+  let [CheckUser, setCheckUser] = useState(null);
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setCheckUser(user);
+        console.log(user);
+        setCheckUser(true);
+        return;
+      }
+      navigate('/login');
     });
-}
 
+  }, []);
 
+  async function getData() {
+    const q = query(collection(db, "Blogs"), orderBy("time", "desc"));
+    const querySnapshot = await getDocs(q);
+    const Blogs = [];
+    querySnapshot.forEach((doc) => {
+      Blogs.push({ id: doc.id, ...doc.data() });
+    });
+    setBlogs(Blogs);
+  }
 
-async function getData() {
-  const q = query(collection(db, "Blogs"), orderBy("time", "desc"));
-  const querySnapshot = await getDocs(q);
-  const Blogs = [];
-  querySnapshot.forEach((doc) => {
-    Blogs.push({ id: doc.id, ...doc.data() });
-  });
-  setBlogs(Blogs);
-}
-
-useEffect(() => {
-  getData();
-}, []);
-
+  useEffect(() => {
+    getData();
+  }, []);
 
   // Function to handle blog submission
-  const publishBlog = async(event) => {
+  const publishBlog = async (event) => {
     event.preventDefault();
 
     const newBlog = {
       title: placeholder.current.value,
       content: text.current.value,
     };
-    if (newBlog.title && newBlog.content == "") {
-      alert("You must fill input fields")
-      return
+
+    if (!newBlog.title || !newBlog.content) {
+      alert("You must fill both input fields");
+      return;
     }
 
     try {
       const docRef = await addDoc(collection(db, "Blogs"), {
-      newBlog,
-      time: Timestamp.fromDate(new Date()),
+        ...newBlog,
+        time: Timestamp.fromDate(new Date()),
       });
 
       console.log("Document written with ID: ", docRef.id);
@@ -96,57 +81,57 @@ useEffect(() => {
         ...blogs,
         {
           id: docRef.id,
-          newBlog,
+          ...newBlog,
           time: Timestamp.fromDate(new Date()),
         },
       ]);
-    placeholder.current.value = '';
-    text.current.value = '';
-    } 
-    catch (e) {
+      placeholder.current.value = '';
+      text.current.value = '';
+    } catch (e) {
       console.error("Error adding document: ", e);
     }
- 
-// To Delete Blog in the firestore
-const editBlog = async (i) => {
-  const updPlaceholder = prompt("Enter placeholder to update");
-  const updText = prompt("Enter blog to update");
+  };
 
-  const toUpdate = doc(db, "Blogs", blogs[i].id);
-     await updateDoc(toUpdate, {
- title : updPlaceholder,
- content : updText,
-});
-console.log("Values has been Updated");
-blogs[i].title = updPlaceholder;
-blogs[i].content = updText;
-};
+  // Function to edit blog
+  const editBlog = async (i) => {
+    const updPlaceholder = prompt("Enter title to update");
+    const updText = prompt("Enter content to update");
 
-// To Delete Blog in the firestore
- const deleteBlog = async (i) => {
-  const ToDelete = blogs[i].id;
-  const updatedBlogs = [...blogs];
-  updatedBlogs.splice(i, 1);
-  setBlogs(updatedBlogs);
+    const toUpdate = doc(db, "Blogs", blogs[i].id);
+    await updateDoc(toUpdate, {
+      title: updPlaceholder,
+      content: updText,
+    });
+    console.log("Values have been updated");
 
-  // To delete Blog in the firestore
-  await deleteDoc(doc(db, "Blogs", ToDelete));
-  console.log("Blog Deleted Successfully");
-};
-};
+    const updatedBlogs = [...blogs];
+    updatedBlogs[i].title = updPlaceholder;
+    updatedBlogs[i].content = updText;
+    setBlogs(updatedBlogs);
+  };
 
+  // Function to delete blog
+  const deleteBlog = async (i) => {
+    const ToDelete = blogs[i].id;
+    const updatedBlogs = [...blogs];
+    updatedBlogs.splice(i, 1);
+    setBlogs(updatedBlogs);
 
-
+    await deleteDoc(doc(db, "Blogs", ToDelete));
+    console.log("Blog deleted successfully");
+  };
 
   return (
     <>
-      <div>
+  <Navbar/>
+   
+      <div className='flex justify-center flex-wrap gap-3 items-center'>
         <h1 className="text-4xl flex justify-center font-bold bg-white w-full p-2 mt-5">
           <FileText className="mr-2" /> Dashboard
         </h1>
 
         {/* Blog Form */}
-        <div className="w-full max-w-lg mt-5">
+        <div className="w-full max-w-lg mt-5 ">
           <form onSubmit={publishBlog} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
             {/* Placeholder (Title) */}
             <div className="mb-4">
@@ -180,8 +165,9 @@ blogs[i].content = updText;
 
       {/* List of Published Blogs */}
       {blogs.length > 0 && (
-        <div className="w-full max-w-lg mt-10">
-          <h2 className="text-2xl font-bold mb-4">Published Blogs</h2>
+        <div className='flex justify-center flex-wrap items-center'>
+        <div className="w-full max-w-lg mt-10 mb-5">
+          <h2 className="text-2xl text-center font-bold mb-4">Published Blogs</h2>
           <ul className="space-y-4">
             {blogs.map((blog, index) => (
               <li key={index} className="bg-white shadow-md rounded px-6 py-4 flex justify-between items-start">
@@ -192,7 +178,7 @@ blogs[i].content = updText;
                 <button
                   onClick={() => editBlog(index)}
                   className="btn btn-outline btn-secondary btn-sm ml-4">
-                 <FilePenLine size={32} strokeWidth={1.75} />
+                  <FilePenLine size={32} strokeWidth={1.75} />
                 </button>
                 <button
                   onClick={() => deleteBlog(index)}
@@ -203,9 +189,10 @@ blogs[i].content = updText;
             ))}
           </ul>
         </div>
+        </div>
       )}
     </>
   );
-}
+};
 
 export default BlogPost;
