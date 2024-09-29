@@ -1,10 +1,56 @@
 import React, { useRef, useState } from 'react';
-import { Edit3, Trash2, FileText } from 'lucide-react'; // Importing Lucide icons for UI improvement
+import { Edit3, Trash2, FileText } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import {  getAuth , onAuthStateChanged , signOut, } from "firebase/auth";
+import { auth , db } from '../Config';
+
+
 
 const BlogPost = () => {
+  const navigate = useNavigate();
   const [blogs, setBlogs] = useState([]); // State to store the list of blogs
   const placeholder = useRef();
   const text = useRef();
+
+
+
+// When user login:
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    const uid = user.uid;
+    console.log(uid);
+  } 
+  else {
+    navigate = "dashboard";
+  }
+});
+
+
+const logout = () => {
+  const auth = getAuth();
+
+  signOut(auth)
+    .then(() => {
+      console.log("Logout succesfully");
+      navigate = "login";
+    })
+
+    .catch((error) => {
+      console.log(error);
+    });
+});
+
+}
+
+
+
+
+
+
+
+
+
+
 
   // Function to handle blog submission
   const publishBlog = (event) => {
@@ -37,7 +83,7 @@ const BlogPost = () => {
         </h1>
 
         {/* Blog Form */}
-        <div className="w-96 mt-5 flex justify-center">
+        <div className="w-full max-w-lg mt-5">
           <form onSubmit={publishBlog} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
             {/* Placeholder (Title) */}
             <div className="mb-4">
