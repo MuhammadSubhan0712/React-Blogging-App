@@ -10,6 +10,7 @@ import Register from './Pages/Register.jsx'
 import BlogPost  from './Pages/BlogPost.jsx'
 import Profile from './Pages/Profile.jsx'
 
+
 const router = createBrowserRouter([
   {
     path:"/",
