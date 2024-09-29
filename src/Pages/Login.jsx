@@ -3,6 +3,7 @@ import { getAuth , signInWithEmailAndPassword } from "firebase/auth";
 import { Link , useNavigate } from 'react-router-dom';
 import { auth } from '../config';
 
+
 const Login = () => {
   const email = useRef();
   const password = useRef();
