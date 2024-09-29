@@ -56,13 +56,6 @@ const logout = () => {
 
 
 
-
-
-
-
-
-
-
   // Function to handle blog submission
   const publishBlog = (event) => {
     event.preventDefault();
