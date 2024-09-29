@@ -6,7 +6,7 @@ import { getAuth ,
   onAuthStateChanged , 
  signOut} from "firebase/auth";
 
-import {app} from "../config"
+import {auth , db} from "../config/Firebase/config"
 
 import {
   collection,
@@ -17,11 +17,8 @@ import {
   updateDoc ,
   query,
   Timestamp,
-  where,
   orderBy, 
 } from "firebase/firestore"
-
-import { auth ,  db } from "../config";
 
 
 const BlogPost = () => {
@@ -109,33 +106,33 @@ useEffect(() => {
     catch (e) {
       console.error("Error adding document: ", e);
     }
-  };
-  };
-
-const editBlog = async ((i) => {
+ 
+// To Delete Blog in the firestore
+const editBlog = async (i) => {
   const updPlaceholder = prompt("Enter placeholder to update");
   const updText = prompt("Enter blog to update");
 
-  const toUpdate = doc(db, "Blogs", Blogs[i].id);
+  const toUpdate = doc(db, "Blogs", blogs[i].id);
      await updateDoc(toUpdate, {
  title : updPlaceholder,
  content : updText,
 });
 console.log("Values has been Updated");
-Blogs[i].title = updPlaceholder;
-Blogs[i].content = updText;
-});
+blogs[i].title = updPlaceholder;
+blogs[i].content = updText;
+};
 
-
+// To Delete Blog in the firestore
  const deleteBlog = async (i) => {
-  const ToDelete = blog[i].id;
-  const updatedBlogs = [...Blogs];
+  const ToDelete = blogs[i].id;
+  const updatedBlogs = [...blogs];
   updatedBlogs.splice(i, 1);
   setBlogs(updatedBlogs);
 
   // To delete Blog in the firestore
   await deleteDoc(doc(db, "Blogs", ToDelete));
   console.log("Blog Deleted Successfully");
+};
 };
 
 

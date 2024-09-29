@@ -4,7 +4,7 @@ import App from './App.jsx'
 import './index.css'
 import { createBrowserRouter , RouterProvider } from 'react-router-dom'
 import Layout  from './Layout.jsx'
-import Dashboard from './Pages/Dashboard.jsx'
+import  Home  from './Pages/Home.jsx'
 import Login from './Pages/Login.jsx'
 import Register from './Pages/Register.jsx'
 import BlogPost  from './Pages/BlogPost.jsx'
@@ -19,7 +19,7 @@ const router = createBrowserRouter([
   children:[
   {
    path:"",
-   element:<Dashboard/>,
+   element:<Home/>,
   },
   {
     path:"register",
@@ -39,7 +39,7 @@ const router = createBrowserRouter([
   },
   {
     path:"*",
-    element:<h2 className='mt-5 p-5 flex justify-center text-red-600 bg-yellow-400'>(!)(!)Not Found(!)(!)</h2>
+    element:<strong><h2 className='mt-5 p-5 text-2xl flex justify-center text-red-600 bg-yellow-400'>404 | Not Found</h2></strong>
   }
 ]
 }

@@ -1,8 +1,7 @@
 import React, { useRef } from 'react';
 import { getAuth , signInWithEmailAndPassword } from "firebase/auth";
 import { Link , useNavigate } from 'react-router-dom';
-import { auth } from '../config';
-
+import {auth} from "../config/Firebase/config"
 
 const Login = () => {
   const email = useRef();

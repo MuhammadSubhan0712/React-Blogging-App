@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 
 
-import {auth} from "../config"
+import {auth} from "../config/Firebase/config"
 
 function Register() {
   const navigate = useNavigate();
