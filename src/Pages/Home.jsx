@@ -44,7 +44,7 @@ const Home = () => {
   return (
     <>
       <Navbar Login={!CheckUser ? "Login" : ""} />
-      <div className="p-10 h-screen  bg-green-200">
+      <div className="p-10 bg-green-200">
         <h1 className="text-green-800 text-center text-3xl font-bold">
           Good Morning Readers
         </h1>
