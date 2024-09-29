@@ -7,7 +7,7 @@ import { auth } from "../config/Firebase/config";
 
 function Register() {
 
-  const [isSubmission, setIsSubmission] = useState(false); // Start with false
+  const [isSubmission, setIsSubmission] = useState(false); 
 
   const navigate = useNavigate();
   
@@ -43,7 +43,7 @@ function Register() {
           <Link to="/Login" className="text-white sm:px-2 px-0 py-0  sm:py-1 hover:bg-[#5628F6]  rounded-lg transition duration-300">Login</Link>
         </div>
       </nav>
-      
+
     <div className="bg-base-100 flex flex-col h-screen items-center justify-center">
       {/* Register form */}
       <div className="w-full max-w-lg">
