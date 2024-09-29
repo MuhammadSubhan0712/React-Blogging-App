@@ -8,10 +8,8 @@ import Navbar from '../components/Navbar';
 const Login = () => {
   const navigate = useNavigate();
 
-  
   const { register, handleSubmit, reset, formState: { errors } } = useForm();
 
-  
   const onSubmit = (data) => {
     const auth = getAuth();
     const { email, password } = data;

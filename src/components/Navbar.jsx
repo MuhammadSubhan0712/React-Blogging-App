@@ -47,7 +47,7 @@ let Navbar = ({ Home, BlogPost, Profile, Logout, Login, Register }) => {
         setLoginUser(false);
       }
     });
-    
+
   }, []);
   
   let logoutUser = async () => {
@@ -59,7 +59,7 @@ let Navbar = ({ Home, BlogPost, Profile, Logout, Login, Register }) => {
   return (
     <>
 
-      <nav className="bg-[#7749F8] sm:p-0 p-1 flex flex-wrap justify-between items-center">
+      <nav className="bg-[#7749F8] sm:p-2 p-3 flex flex-wrap justify-between items-center">
         <Link to="/" className="text-white sm:ml-24 ml-5 sm:text-[1.4rem] text-[1.1rem] font-bold hover:bg-[#5628F6]  rounded-lg transition duration-300 sm:px-2 px-0 py-0  sm:py-1">Personal Blogging App</Link>
         <div className="flex justify-center items-center font-semibold sm:mr-12 mr-5 ">
           {LoginUser ?
