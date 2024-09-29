@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth, loginUser } from "../config/Firebase/Methods";
 import { collection, getDocs } from "firebase/firestore";
-import { db } from "../config/Firebase/config"; // Firebase Firestore config
+import { db } from "../config/Firebase/config";
 
 const Home = () => {
   const [blogs, setBlogs] = useState([]);
@@ -27,13 +27,13 @@ const Home = () => {
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        const blogCollection = collection(db, "Blogs"); // Reference to blogs collection
+        const blogCollection = collection(db, "Blogs"); 
         const blogSnapshot = await getDocs(blogCollection);
         const blogList = blogSnapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
         }));
-        setBlogs(blogList); // Set blogs to state
+        setBlogs(blogList);
       } catch (error) {
         console.error("Error fetching blogs:", error);
       }
