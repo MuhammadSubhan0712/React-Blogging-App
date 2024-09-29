@@ -3,9 +3,9 @@ import React from 'react'
 
 export const Navbar = () => {
   return (
-    <div className="navbar bg-purple-600 text-white">
+    <div className="navbar flex justify-around bg-purple-600 text-white">
     <div className="flex-1">
-      <a className="btn btn-ghost text-xl">daisyUI</a>
+      <a className="btn btn-ghost text-xl">Personal Blogging App</a>
     </div>
     <div className="flex-none">
       <div className="dropdown dropdown-end">
@@ -48,7 +48,7 @@ export const Navbar = () => {
         </div>
         <ul
           tabIndex={0}
-          className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
+          className="menu menu-sm dropdown-content bg-gray-700 rounded-box z-[1] mt-3 w-52 p-2 shadow-slate-100">
           <li>
             <a className="justify-between">
               Profile
