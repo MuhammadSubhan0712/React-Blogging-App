@@ -26,7 +26,7 @@ import { auth ,  db } from "../config";
 
 const BlogPost = () => {
   const navigate = useNavigate();
-  const [blogs, setBlogs] = useState([]); // State to store the list of blogs
+  const [blogs, setBlogs] = useState([]);
   const placeholder = useRef();
   const text = useRef();
 
@@ -75,9 +75,6 @@ useEffect(() => {
 }, []);
 
 
-
-
-
   // Function to handle blog submission
   const publishBlog = async(event) => {
     event.preventDefault();
@@ -116,20 +113,18 @@ useEffect(() => {
   };
 
 const editBlog = async ((i) => {
-  const updatepl = prompt("Enter placeholder to update");
-  const updatebl = prompt("Enter blog to update");
+  const updPlaceholder = prompt("Enter placeholder to update");
+  const updText = prompt("Enter blog to update");
 
-  const toUpdate = doc(db, "Blogs", blog_arr[i].id);
-
-await updateDoc(toUpdate, {
- Placeholder : updatepl,
- Blog : updatebl,
+  const toUpdate = doc(db, "Blogs", Blogs[i].id);
+     await updateDoc(toUpdate, {
+ title : updPlaceholder,
+ content : updText,
 });
 console.log("Values has been Updated");
-Blogs[i].Placeholder = updatepl;
-Blogs[i].Blog = updatebl;
-
- });
+Blogs[i].title = updPlaceholder;
+Blogs[i].content = updText;
+});
 
 
  const deleteBlog = async (i) => {
@@ -214,6 +209,6 @@ Blogs[i].Blog = updatebl;
       )}
     </>
   );
-};
+}
 
 export default BlogPost;
