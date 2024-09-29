@@ -8,10 +8,10 @@ import Navbar from '../components/Navbar';
 const Login = () => {
   const navigate = useNavigate();
 
-  // Using React Hook Form's useForm for handling form submission and validation
+  
   const { register, handleSubmit, reset, formState: { errors } } = useForm();
 
-  // Form submission handler for login
+  
   const onSubmit = (data) => {
     const auth = getAuth();
     const { email, password } = data;
@@ -21,7 +21,7 @@ const Login = () => {
         const user = userCredential.user;
         console.log(user);
 
-        // Navigate to the blog post page after login
+        // Navigate to the blog post page after sucessful login
         navigate('/blogpost');
       })
       .catch((error) => {
@@ -42,8 +42,6 @@ const Login = () => {
         </div>
       </nav>
 
-      {/* <NavbarBlow PageName='Login' /> */}
-      
         {/* Login Header */}
         <h1 className="text-3xl flex justify-center font-bold bg-base-200 w-full p-3 mt-5 mb-6">
           Login
