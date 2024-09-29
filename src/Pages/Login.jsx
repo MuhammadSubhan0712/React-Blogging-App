@@ -1,13 +1,35 @@
 import React, { useRef } from 'react';
 import { getAuth, signInWithEmailAndPassword  }from "firebase/auth";
-
+import { Link , useNavigate } from 'react-router-dom';
 import { auth } from '../Config';
 
 const Login = () => {
   const email = useRef();
   const password = useRef();
 
+const navigate = useNavigate();
 
+const submit = (event) => {
+  event.preventDefault()
+
+  const auth = getAuth();
+
+  signInWithEmailAndPassword(auth, email.current.value , password.current.value)
+  
+
+    .then((userCredential) => {
+      const user = userCredential.user;
+      console.log(user);
+      navigate = "postblog";
+
+    })
+    
+    .catch((error) => {
+      const errorMessage = error.message;
+      console.log("Error====>",errorMessage);
+      alert(errorMessage);    
+    });
+}
 
   return (
   
@@ -21,7 +43,7 @@ const Login = () => {
       {/* Login Form */}
       <div className="flex-grow flex items-center justify-center w-full px-4">
         <div className="w-full max-w-xs">
-          <form id="form" className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+          <form onSubmit={submit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
             {/* Email Input */}
             <div className="mb-4">
               <input
