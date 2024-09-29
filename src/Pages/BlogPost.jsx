@@ -1,8 +1,13 @@
-import React, { useRef, useState } from 'react';
-import { Edit3, Trash2, FileText } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
+import { Edit3, Trash2, FileText , FilePenLine } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import {  getAuth , onAuthStateChanged , signOut, } from "firebase/auth";
-import { auth , db } from '../Config';
+
+import { getAuth ,
+  onAuthStateChanged , 
+ signOut} from "firebase/auth";
+
+import {app} from "../config"
+
 import {
   collection,
   addDoc,
@@ -15,6 +20,8 @@ import {
   where,
   orderBy, 
 } from "firebase/firestore"
+
+import { auth ,  db } from "../config";
 
 
 const BlogPost = () => {
@@ -53,31 +60,91 @@ const logout = () => {
 
 
 
+async function getData() {
+  const q = query(collection(db, "Blogs"), orderBy("time", "desc"));
+  const querySnapshot = await getDocs(q);
+  const Blogs = [];
+  querySnapshot.forEach((doc) => {
+    Blogs.push({ id: doc.id, ...doc.data() });
+  });
+  setBlogs(Blogs);
+}
+
+useEffect(() => {
+  getData();
+}, []);
+
+
 
 
 
   // Function to handle blog submission
-  const publishBlog = (event) => {
+  const publishBlog = async(event) => {
     event.preventDefault();
 
     const newBlog = {
       title: placeholder.current.value,
       content: text.current.value,
     };
+    if (newBlog.title && newBlog.content == "") {
+      alert("You must fill input fields")
+      return
+    }
 
-    // Adding the new blog to the list of blogs
-    setBlogs([newBlog, ...blogs]);
+    try {
+      const docRef = await addDoc(collection(db, "Blogs"), {
+      newBlog,
+      time: Timestamp.fromDate(new Date()),
+      });
 
-    // Clear input fields after submission
+      console.log("Document written with ID: ", docRef.id);
+      setBlogs([
+        ...blogs,
+        {
+          id: docRef.id,
+          newBlog,
+          time: Timestamp.fromDate(new Date()),
+        },
+      ]);
     placeholder.current.value = '';
     text.current.value = '';
+    } 
+    catch (e) {
+      console.error("Error adding document: ", e);
+    }
+  };
   };
 
-  // Function to delete a blog post
-  const deleteBlog = (indexToDelete) => {
-    const updatedBlogs = blogs.filter((_, index) => index !== indexToDelete);
-    setBlogs(updatedBlogs);
-  };
+const editBlog = async ((i) => {
+  const updatepl = prompt("Enter placeholder to update");
+  const updatebl = prompt("Enter blog to update");
+
+  const toUpdate = doc(db, "Blogs", blog_arr[i].id);
+
+await updateDoc(toUpdate, {
+ Placeholder : updatepl,
+ Blog : updatebl,
+});
+console.log("Values has been Updated");
+Blogs[i].Placeholder = updatepl;
+Blogs[i].Blog = updatebl;
+
+ });
+
+
+ const deleteBlog = async (i) => {
+  const ToDelete = blog[i].id;
+  const updatedBlogs = [...Blogs];
+  updatedBlogs.splice(i, 1);
+  setBlogs(updatedBlogs);
+
+  // To delete Blog in the firestore
+  await deleteDoc(doc(db, "Blogs", ToDelete));
+  console.log("Blog Deleted Successfully");
+};
+
+
+
 
   return (
     <>
@@ -131,9 +198,14 @@ const logout = () => {
                   <p className="text-gray-700">{blog.content}</p>
                 </div>
                 <button
+                  onClick={() => editBlog(index)}
+                  className="btn btn-outline btn-secondary btn-sm ml-4">
+                 <FilePenLine size={32} strokeWidth={1.75} />
+                </button>
+                <button
                   onClick={() => deleteBlog(index)}
                   className="btn btn-outline btn-error btn-sm ml-4">
-                  <Trash2 />
+                  <Trash2 size={32} strokeWidth={1.75} />
                 </button>
               </li>
             ))}
