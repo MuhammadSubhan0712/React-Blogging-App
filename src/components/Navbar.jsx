@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { auth, db, getData, signOutUser } from '../config/Firebase/Methods'
+import { auth, db , signOutUser } from '../config/Firebase/Methods'
 import { onAuthStateChanged } from 'firebase/auth'
-import { collection, getDocs } from 'firebase/firestore'
+import { doc } from 'firebase/firestore'
+import { getDoc } from 'firebase/firestore'
 
 
 let Navbar = ({ Home, BlogPost, Profile, Logout, Login, Register }) => {
@@ -22,27 +23,29 @@ let Navbar = ({ Home, BlogPost, Profile, Logout, Login, Register }) => {
       if (user) {
         console.log(user);
         setLoginUser(true);
-        // setUid(user.uid);
+        
   
-        // Uid set hone ka wait karte hain aur phir data fetch karte hain
+      
         let GetDataFromFirebase = async () => {
           try {
-          const querySnapshot = await getDocs(collection(db, "users" , user.uid));
-            querySnapshot.forEach((doc) => {
-              console.log(doc.data());
-              if (doc.data().id === user.uid) { // yahan user.uid use kiya hai
-                console.log('login');
-                setUserImage(doc.data().profileImage);
-                setUserFullName(doc.data().fullName);
-                setUserEmail(doc.data().email);
-              }
-            });
-          } catch (error) {
-            console.log("Error getting documents: ", error);
+            const docRef = doc(db, "users", user.uid); // Reference to the specific user's document
+            const docSnap = await getDoc(docRef);
+        
+            if (docSnap.exists()) {
+              const userData = docSnap.data();
+              setUserImage(userData.profileImage);  // Assuming profileImage is the URL
+              setUserFullName(userData.fullName);
+              setUserEmail(userData.email);
+            } 
+            else {
+              console.log("No such document!");
+            }
+          } 
+          catch (error) {
+            console.log("Error getting document: ", error);
           }
         };
-  
-        GetDataFromFirebase(); // Ab function call karte hain
+        GetDataFromFirebase(); 
       } else {
         setLoginUser(false);
       }
