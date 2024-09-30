@@ -27,7 +27,7 @@ let Navbar = ({ Home, BlogPost, Profile, Logout, Login, Register }) => {
         // Uid set hone ka wait karte hain aur phir data fetch karte hain
         let GetDataFromFirebase = async () => {
           try {
-            const querySnapshot = await getDocs(collection(db, "users"));
+          const querySnapshot = await getDocs(collection(db, "users" , user.uid));
             querySnapshot.forEach((doc) => {
               console.log(doc.data());
               if (doc.data().id === user.uid) { // yahan user.uid use kiya hai
@@ -77,7 +77,7 @@ let Navbar = ({ Home, BlogPost, Profile, Logout, Login, Register }) => {
                     <img
                       className=" w-8 h-8 rounded-full object-cover"
                       src={UserImage}
-                      alt="user photo"
+                      alt="User Profile"
                     />
                   </button>
                   {/* Dropdown menu */}

@@ -166,4 +166,4 @@ async function uploadImage(files, email) {
 }
 
 
-export { auth, db, signUpUser, loginUser, signOutUser, sendData, getData, getAllData, deleteDocument, updateDocument, uploadImage };
+export { auth, db, storage ,  signUpUser, loginUser, signOutUser, sendData, getData, getAllData, deleteDocument, updateDocument, uploadImage };

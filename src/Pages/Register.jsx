@@ -1,7 +1,14 @@
 import React , { useState }from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from 'react-hook-form';
-import { signUpUser, uploadImage } from '../config/Firebase/Methods';
+import { signUpUser, uploadImage , storage} from '../config/Firebase/Methods';
+import {
+  getDownloadURL,
+  ref,
+  uploadBytes
+} from "firebase/storage";
+
+
 import { auth } from "../config/Firebase/config";
 
 
@@ -23,7 +30,7 @@ function Register() {
       const userData = await signUpUser({
         email: data.email,
         password: data.password,
-        fullName: data.fullName,
+        fullName: data.fname,
         profileImage: userProfileImageUrl
       });
       console.log(userData);
@@ -34,7 +41,13 @@ function Register() {
     }
     setIsSubmission(false); // Reset to false after submission completes
   };
-  
+
+  const uploadImage = async (file, userEmail) => {
+    const storageRef = ref(storage, `profileImages/${userEmail}`);
+    const uploadTask = await uploadBytes(storageRef, file);
+    const downloadURL = await getDownloadURL(uploadTask.ref);
+    return downloadURL;
+  };
   return (
     <>
      <nav className="bg-[#7749F8] sm:p-0 p-1 flex flex-wrap justify-between items-center">
