@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Edit3, Trash2, FileText, FilePenLine } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+import { onAuthStateChanged } from "firebase/auth";
 
 import { auth, db } from "../config/Firebase/config";
 
@@ -38,6 +38,7 @@ const BlogPost = () => {
       navigate("/login");
     });
   }, []);
+
 
   async function getData() {
     const q = query(collection(db, "Blogs"), orderBy("time", "desc"));
@@ -126,10 +127,9 @@ const BlogPost = () => {
   return (
     <>
       <Navbar />
-
       <div className="flex justify-center flex-wrap gap-3 items-center">
         <h1 className="text-4xl flex justify-center font-bold bg-white w-full p-2 mt-5">
-          <FileText className="mr-2" /> Dashboard
+          <FileText className="mr-2" />Dashboard
         </h1>
 
         {/* Blog Form */}

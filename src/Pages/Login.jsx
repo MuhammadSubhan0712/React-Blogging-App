@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { Link, useNavigate } from 'react-router-dom';
 import { auth } from "../config/Firebase/config";
-import Navbar from '../components/Navbar';
+
 
 const Login = () => {
   const navigate = useNavigate();
@@ -33,20 +33,21 @@ const Login = () => {
     <>
       <div>
 
-      <nav className="bg-[#7749F8] sm:p-0 p-1 flex flex-wrap justify-between items-center">
+      <nav className="bg-[#7749F8] sm:p-2 p-3 flex flex-wrap justify-between items-center">
         <Link to="/" className="text-white sm:ml-24 ml-5 sm:text-[1.4rem] text-[1.3rem] font-bold hover:bg-[#5628F6]  rounded-lg transition duration-300 sm:px-2 px-0 py-0  sm:py-1">Personal Blogging App</Link>
         <div className="flex justify-center items-center font-semibold sm:mr-12 mr-5 ">
           <Link to="/register" className="text-white sm:px-2 px-0 py-0  sm:py-1 hover:bg-[#5628F6]  rounded-lg transition duration-300">Register</Link>
         </div>
       </nav>
 
-        {/* Login Header */}
-        <h1 className="text-3xl flex justify-center font-bold bg-base-200 w-full p-3 mt-5 mb-6">
-          Login
-        </h1>
+       
 
         {/* Login Form */}
-        <div className="flex-grow flex items-center justify-center w-full px-4">
+         {/* Login Header */}
+         <h1 className="text-3xl flex justify-center font-bold bg-base-200 p-5 ">
+          Login
+        </h1>
+        <div className="flex-grow flex items-center justify-center w-full mt-2 px-4">
           <div className="w-full max-w-xs">
             <form onSubmit={handleSubmit(onSubmit)} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
 
