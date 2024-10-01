@@ -85,6 +85,7 @@ const Profile = () => {
     <>
       <Navbar />
       <div className="profile-page bg-cyan-700 min-h-screen flex flex-col items-center py-10 px-4">
+        <h1 className="text-2xl font-bold p-4 text-blue-50"> YOUR PROFILE</h1>
         <div className="profile-content shadow-lg p-8 rounded-lg bg-base-200 text-gray-600 w-full max-w-md text-center">
           {/* Profile Picture */}
           {userData.photoURL && (
@@ -121,7 +122,7 @@ const Profile = () => {
                   value={oldPassword}
                   onChange={(e) => setOldPassword(e.target.value)}
                   className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:border-blue-500"
-                  placeholder="Enter Old Password"
+                  placeholder="Enter Old Password" 
                 />
               </div>
               <div className="mb-4">
