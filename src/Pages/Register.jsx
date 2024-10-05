@@ -46,7 +46,6 @@ function Register() {
       await setDoc(doc(db, "users", user.uid), {
         Username: data.fname,
         email: data.email,
-        id: data.uid,
         photoURL: imageUrl,
       });
       console.log("User data stored in the firestore..");

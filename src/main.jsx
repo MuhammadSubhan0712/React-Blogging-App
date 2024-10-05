@@ -9,6 +9,7 @@ import Register from "./Pages/Register.jsx";
 import BlogPost from "./Pages/BlogPost.jsx";
 import Profile from "./Pages/Profile.jsx";
 import SingleUser from "./Pages/SingleUser.jsx";
+import SingleUserBlogs from "./Pages/SingleUserBlogs.jsx";
 
 const router = createBrowserRouter([
   {
@@ -37,8 +38,12 @@ const router = createBrowserRouter([
         element: <Profile />,
       },
       {
-        path: "singleuser",
+        path: "singleuser/:userId",
         element: <SingleUser />,
+      },
+      {
+        path:"singleuserblogs/:userId",
+        element:<SingleUserBlogs/>
       },
       {
         path: "*",

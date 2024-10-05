@@ -1,11 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Edit3, Trash2, FileText, FilePenLine } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-
 import { onAuthStateChanged } from "firebase/auth";
-
 import { auth, db } from "../config/Firebase/config";
-
 import {
   collection,
   addDoc,
@@ -25,27 +22,26 @@ const BlogPost = () => {
   const placeholder = useRef();
   const author = useRef();
   const text = useRef();
+  const [CheckUser, setCheckUser] = useState(null);
 
-  let [CheckUser, setCheckUser] = useState(null);
+  // User authentication check
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         setCheckUser(user);
-        console.log(user);
-        setCheckUser(true);
         return;
       }
-      navigate("/login");
+      navigate("/login"); // Redirect to login if not authenticated
     });
   }, []);
 
-
+  // Fetch blog data
   async function getData() {
     const q = query(collection(db, "Blogs"), orderBy("time", "desc"));
     const querySnapshot = await getDocs(q);
     const Blogs = [];
     querySnapshot.forEach((doc) => {
-      Blogs.push({ id: doc.id, ...doc.data() });
+      Blogs.unshift({ id: doc.id, ...doc.data() });
     });
     setBlogs(Blogs);
   }
@@ -54,7 +50,7 @@ const BlogPost = () => {
     getData();
   }, []);
 
-  // Function to handle blog submission
+  // Publish a new blog
   const publishBlog = async (event) => {
     event.preventDefault();
 
@@ -62,10 +58,12 @@ const BlogPost = () => {
       title: placeholder.current.value,
       author: author.current.value,
       content: text.current.value,
+      userId: CheckUser.uid, // Store the logged-in user's ID
+      userProfile: CheckUser.photoURL, // Store user profile image
     };
 
     if (!newBlog.title || !newBlog.author || !newBlog.content) {
-      alert("You must fill both input fields");
+      alert("You must fill all input fields");
       return;
     }
 
@@ -75,7 +73,6 @@ const BlogPost = () => {
         time: Timestamp.fromDate(new Date()),
       });
 
-      console.log("Document written with ID: ", docRef.id);
       setBlogs([
         ...blogs,
         {
@@ -92,7 +89,7 @@ const BlogPost = () => {
     }
   };
 
-  // Function to edit blog
+  // Edit a blog
   const editBlog = async (i) => {
     const updPlaceholder = prompt("Enter title to update");
     const updAuth = prompt("Enter author name to update");
@@ -104,7 +101,6 @@ const BlogPost = () => {
       author: updAuth,
       content: updText,
     });
-    console.log("Values have been updated");
 
     const updatedBlogs = [...blogs];
     updatedBlogs[i].title = updPlaceholder;
@@ -113,7 +109,7 @@ const BlogPost = () => {
     setBlogs(updatedBlogs);
   };
 
-  // Function to delete blog
+  // Delete a blog
   const deleteBlog = async (i) => {
     const ToDelete = blogs[i].id;
     const updatedBlogs = [...blogs];
@@ -121,7 +117,11 @@ const BlogPost = () => {
     setBlogs(updatedBlogs);
 
     await deleteDoc(doc(db, "Blogs", ToDelete));
-    console.log("Blog deleted successfully");
+  };
+
+  // Navigate to a user's single blog page
+  const handleUserClick = (userId) => {
+    navigate(`/user/${userId}`);
   };
 
   return (
@@ -129,7 +129,7 @@ const BlogPost = () => {
       <Navbar />
       <div className="flex justify-center flex-wrap gap-3 items-center">
         <h1 className="text-4xl flex justify-center font-bold bg-white w-full p-2 mt-5">
-          <FileText className="mr-2" />Dashboard
+          <FileText className="mr-2" /> Dashboard
         </h1>
 
         {/* Blog Form */}
@@ -137,7 +137,7 @@ const BlogPost = () => {
           <form
             onSubmit={publishBlog}
             className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-            {/* Placeholder (Title) */}
+            {/* Title Input */}
             <div className="mb-4">
               <input
                 className="input input-bordered w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -147,7 +147,7 @@ const BlogPost = () => {
               />
             </div>
 
-            {/* Author (Title) */}
+            {/* Author Input */}
             <div className="mb-4">
               <input
                 className="input input-bordered w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -157,12 +157,12 @@ const BlogPost = () => {
               />
             </div>
 
-            {/* Blog Content */}
+            {/* Content Input */}
             <div className="mb-4">
               <textarea
                 rows={6}
                 className="textarea textarea-bordered w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                placeholder="What is in your mind"
+                placeholder="What's on your mind?"
                 ref={text}
               />
             </div>
@@ -192,19 +192,29 @@ const BlogPost = () => {
                   key={index}
                   className="bg-white shadow-md rounded px-6 py-4 flex justify-between items-start">
                   <div>
+                    {/* Profile Image and Navigation */}
+                    <img
+                      src={blog.userProfile}
+                      alt="Profile"
+                      className="w-10 h-10 rounded-full cursor-pointer mb-2"
+                      onClick={() => handleUserClick(blog.userId)}
+                    />
                     <h3 className="text-xl font-bold">{blog.title}</h3>
                     <p className="text-gray-700">{blog.content}</p>
                   </div>
-                  <button
-                    onClick={() => editBlog(index)}
-                    className="btn btn-outline btn-secondary btn-sm ml-4">
-                    <FilePenLine size={32} strokeWidth={1.75} />
-                  </button>
-                  <button
-                    onClick={() => deleteBlog(index)}
-                    className="btn btn-outline btn-error btn-sm ml-4">
-                    <Trash2 size={32} strokeWidth={1.75} />
-                  </button>
+
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => editBlog(index)}
+                      className="btn btn-outline btn-secondary btn-sm">
+                      <FilePenLine size={32} strokeWidth={1.75} />
+                    </button>
+                    <button
+                      onClick={() => deleteBlog(index)}
+                      className="btn btn-outline btn-error btn-sm">
+                      <Trash2 size={32} strokeWidth={1.75} />
+                    </button>
+                  </div>
                 </li>
               ))}
             </ul>
